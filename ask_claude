@@ -1,0 +1,14 @@
+#!/bin/bash
+# Simple Claude bridge - you'll need to add your API key
+API_KEY="YOUR_API_KEY_HERE"
+PROMPT="$@"
+
+curl -s https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-3-haiku-20240307",
+    "max_tokens": 1000,
+    "messages": [{"role": "user", "content": "'"$PROMPT"'"}]
+  }' | python3 -c "import sys,json; print(json.load(sys.stdin)['content'][0]['text'])"

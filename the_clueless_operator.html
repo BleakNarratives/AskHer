@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body { 
+        height: 100vh; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        background: #0a0a0a; 
+        color: #ff5555; 
+        font-family: 'Courier New', monospace; 
+        margin: 0;
+        user-select: none;
+    }
+    #terminal { 
+        width: 90%; 
+        max-width: 450px; 
+        border: 1px solid #333; 
+        background: #000; 
+        padding: 20px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    }
+    .error-text { color: #ff5555; font-weight: bold; }
+    .system-text { color: #55ff55; }
+    .input-line { color: #ffff55; margin-top: 15px; }
+    button {
+        background: #222;
+        color: #fff;
+        border: 1px solid #444;
+        padding: 8px 15px;
+        font-family: 'Courier New', monospace;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover { background: #ff5555; color: #000; }
+    .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div id="terminal">
+    <p class="system-text">[SYSTEM INITIALIZED: ROOTBASE V4.4]</p>
+    <p>> Executing script: <span style="color: #00ffff;">operation_drinks.sh</span>...</p>
+    <p class="error-text">CRITICAL ERROR: Target "Haley" selected, but Operator lacks destination coordinates (Phone Number).</p>
+    <p class="error-text">ERR_CODE: 404_NO_DIGITS_FOUND</p>
+    <hr style="border-color: #222;">
+    
+    <div id="phase1">
+        <p>The system suggests the following recovery options:</p>
+        <button onclick="chooseOption(1)">1. Pretend this was sent by a malfunctioning AI bot</button><br>
+        <button onclick="chooseOption(2)">2. Blame the lack of digits on a solar flare</button><br>
+        <button onclick="chooseOption(3)">3. Deploy emergency self-deprecation patch</button>
+    </div>
+
+    <div id="phase2" class="hidden">
+        <p class="input-line">> Patch applied successfully.</p>
+        <p style="color: #fff;">"Look, I was going to deploy a highly sophisticated, unyielding digital invitation for drinks tonight, but my code completely choked because I realized I don't actually have your number to send it to. Crucial design flaw."</p>
+        <p class="system-text">Remedy: Input digits below to override system failure.</p>
+    </div>
+</div>
+
+<script>
+    function chooseOption(num) {
+        document.getElementById('phase1').classList.add('hidden');
+        document.getElementById('phase2').classList.remove('hidden');
+    }
+</script>
+</body>
+</html>

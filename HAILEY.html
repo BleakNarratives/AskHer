@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body { height: 100vh; display: flex; align-items: center; justify-content:
+workspace (/directory)
+/sto.../.../RootBase branch
+master sandbox
+no sandbox /model
+gemini-3.1-flash-lite ✖ 20 errors (F12 for details) …
+... 4 hidden (Ctrl+O) ...
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body { height: 100vh; display: flex; align-items: center; justify-content:
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body { height: 100vh; display: flex; align-items: center; justify-content: center; background: #0a0a0a; color: white; font-family: sans-serif; overflow: hidden; }
+    #noBtn { position: absolute; padding: 15px 30px; font-size: 18px; border: none; cursor: pointer; border-radius: 5px; background: #e74c3c; color: white; transition: all 0.1s ease; }
+    .loop-de-loop { animation: spin 0.5s infinite linear; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+    <h1>Hey Haley, will you go out with me?</h1>
+    <button id="noBtn">No</button>
+<script>
+    const btn = document.getElementById('noBtn');
+    let frustration = 0;
+    btn.addEventListener('mousemove', (e) => {
+        frustration++;
+        // Make it frantic
+        const x = Math.random() * (window.innerWidth - 100);
+        const y = Math.random() * (window.innerHeight - 50);
+        btn.style.left = x + 'px';
+        btn.style.top = y + 'px';
+
+        // Add loop-de-loop effect when she gets close
+        if (frustration > 10) {
+            btn.classList.add('loop-de-loop');
+            btn.innerText = "You're too fast!";
+        }
+
+        // Final surrender
+        if (frustration > 30) {
+            btn.classList.remove('loop-de-loop');
+            btn.innerText = "Okay, okay! Yes!";
+            btn.style.background = "#2ecc71";
+            btn.onclick = () => alert("Haley, you caught me! Let's go!");
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body { 
+        height: 100vh; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        background: #030303; 
+        color: #fff; 
+        font-family: 'Courier New', monospace; 
+        margin: 0;
+        overflow: hidden;
+        user-select: none;
+    }
+    #lockContainer { text-align: center; }
+    #prompt { font-size: 24px; letter-spacing: 4px; margin-bottom: 30px; transition: color 0.5s; }
+    #intentBtn { 
+        padding: 25px 50px; 
+        font-size: 18px; 
+        background: transparent; 
+        border: 1px solid #333; 
+        color: #888; 
+        cursor: pointer; 
+        letter-spacing: 2px;
+        transition: all 0.2s, border-color 1s; 
+    }
+    #intentBtn:active { 
+        border-color: #fff; 
+        color: #fff;
+        box-shadow: 0 0 15px rgba(255,255,255,0.1);
+    }
+    .hidden { display: none; }
+    #message { text-align: center; animation: glitch 0.4s ease-in-out; }
+    h1 { font-size: 32px; letter-spacing: 5px; font-weight: 300; }
+    @keyframes glitch {
+        0% { transform: opacity(0); }
+        50% { transform: scale(0.98); opacity: 0.5; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+</style>
+</head>
+<body>
+    <div id="lockContainer">
+        <p id="prompt">HALEY. FOCUS.</p>
+        <button id="intentBtn">HOLD TO INITIALIZE</button>
+    </div>
+    <div id="message" class="hidden">
+        <h1>DRINKS. TONIGHT. DON'T BE LATE.</h1>
+    </div>
+<script>
+    const btn = document.getElementById('intentBtn');
+    const msg = document.getElementById('message');
+    const prompt = document.getElementById('prompt');
+    let timer;
+    let progress;
+
+    const startHold = () => {
+        prompt.innerText = "ANALYZING INTENT...";
+        prompt.style.color = "#888";
+        
+        timer = setTimeout(() => {
+            document.getElementById('lockContainer').classList.add('hidden');
+            msg.classList.remove('hidden');
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Sharp haptic pop on trigger
+        }, 1800); // 1.8 seconds of absolute focus required
+    };
+
+    const cancelHold = () => {
+        clearTimeout(timer);
+        prompt.innerText = "HALEY. FOCUS.";
+        prompt.style.color = "#fff";
+    };
+
+    // Mobile + Desktop Support
+    btn.onmousedown = startHold;
+    btn.onmouseup = cancelHold;
+    btn.ontouchstart = (e) => { e.preventDefault(); startHold(); };
+    btn.ontouchend = cancelHold;
+</script>
+</body>
+</html>

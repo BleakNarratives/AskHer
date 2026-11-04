@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haley // Sovereign</title>
+    <style>
+        :root { --bg: #0f0f0f; --text: #e0e0e0; --accent: #4285f4; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Google Sans', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .container { text-align: center; max-width: 90vw; }
+        h1 { font-weight: 400; letter-spacing: -0.5px; margin-bottom: 2rem; }
+        #intentBtn { 
+            padding: 16px 32px; 
+            font-size: 16px; 
+            background: transparent; 
+            border: 1px solid #333; 
+            color: var(--text); 
+            border-radius: 24px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+        }
+        #intentBtn:hover { border-color: var(--accent); color: var(--accent); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div id="lockContainer">
+        <p>Haley. Focus.</p>
+        <button id="intentBtn">Hold to initiate contact.</button>
+    </div>
+    <div id="message" class="hidden">
+        <h1>Drinks. Tonight.<br>Don't be late.</h1>
+    </div>
+
+<script>
+    const btn = document.getElementById('intentBtn');
+    const msg = document.getElementById('message');
+    const lock = document.getElementById('lockContainer');
+    let timer;
+
+    btn.onmousedown = () => {
+        timer = setTimeout(() => {
+            lock.classList.add('hidden');
+            msg.classList.remove('hidden');
+        }, 1500); 
+    };
+
+    btn.onmouseup = () => clearTimeout(timer);
+    btn.ontouchstart = btn.onmousedown;
+    btn.ontouchend = btn.onmouseup;
+</script>
+</body>
+</html>

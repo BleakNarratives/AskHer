@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body { 
+        background: #020202; color: #00ff66; 
+        font-family: 'Courier New', monospace; 
+        padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;
+    }
+    #workshop-box { 
+        width: 100%; max-width: 600px; border: 1px dashed #00ff66; padding: 30px; background: #000;
+        box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+    }
+    .log-entry { margin: 5px 0; font-size: 13px; line-height: 1.4; }
+    .accent { color: #00ffff; }
+    .alert { color: #ff3333; }
+    .success { color: #ffff00; font-weight: bold; }
+    #loader { display: inline-block; animation: spin 1s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div id="workshop-box">
+    <div id="terminal-header">
+        [⚡] ZEROCLAW AUTOMATION ENGINE V0.1-BETA<br>
+        [⚙️] TASK: AUTOMATED_GIRLFRIEND_BUILDER_WORKSHOP.sh<br>
+        ====================================================
+    </div>
+    <div id="log-container" style="margin-top: 15px;"></div>
+</div>
+
+<script>
+    const container = document.getElementById('log-container');
+    
+    const logs = [
+        { text: "> Initializing Zeroclaw pipeline...", delay: 500 },
+        { text: "> Spawning multi-agent swarm [Syntax-AI-CLI, MrsHiggins, Captcoder]...", delay: 1000 },
+        { text: "> Captcoder capturing intent: 'Assemble perfect evening blueprint with Haley.'", delay: 1500 },
+        { text: "> Rube Goldberg Mechanism Triggered...", delay: 2000 },
+        { text: "  [Ball 1] Drops into Bash compiler... Success.", delay: 2300 },
+        { text: "  [Lever 2] Trips Kotlin execution wrapper... Success.", delay: 2600 },
+        { text: "  [Gear 3] Spasms the Gradle daemon into submission... Success.", delay: 3000 },
+        { text: "> STATUS: All technical components perfectly optimized. 100% efficient.", delay: 3500 },
+        { text: "⚠️ CRITICAL EXCEPTION: PIPELINE STALLED AT FINAL OUTPUT GATE.", delay: 4200, type: 'alert' },
+        { text: "❌ REASON: RootBase multi-agent framework cannot deliver invitation.", delay: 4800, type: 'alert' },
+        { text: "🔄 RUNTIME ERROR: The Operator forgot to obtain her phone number.", delay: 5500, type: 'alert' },
+        { text: "> Initiating RECURSION ERROR PATCH to prevent system meltdown...", delay: 6200 },
+        { text: "🔄 Retrying compile...", delay: 6700 },
+        { text: "🔄 Retrying compile... (Agent swarm is getting dizzy)", delay: 7200 },
+        { text: "🔄 Retrying compile... (Why are we still here? Just to suffer?)", delay: 7700 },
+        { text: "🚨 SYSTEM DEADLOCK: Recursive loop detected. Infinite loop hazard.", delay: 8500, type: 'alert' },
+        { text: "💡 EMERGENCY MANUAL BYPASS REQUIRED.", delay: 9200, type: 'success' },
+        { text: "Please insert the missing variable (10-digit payload) to satisfy the compiler and break the loop:", delay: 10000, type: 'accent' }
+    ];
+
+    let currentStep = 0;
+
+    function runPipeline() {
+        if (currentStep < logs.length) {
+            const entry = logs[currentStep];
+            const p = document.createElement('p');
+            p.className = 'log-entry';
+            if (entry.type === 'alert') p.className += ' alert';
+            if (entry.type === 'accent') p.className += ' accent';
+            if (entry.type === 'success') p.className += ' success';
+            
+            p.innerHTML = entry.text;
+            container.appendChild(p);
+            
+            // Auto scroll
+            window.scrollTo(0, document.body.scrollHeight);
+            
+            currentStep++;
+            setTimeout(runPipeline, entry.delay - (logs[currentStep - 2] ? logs[currentStep - 2].delay : 0));
+        } else {
+            // Show the final user intervention box
+            const interaction = document.createElement('div');
+            interaction.innerHTML = `
+                <div style="margin-top: 15px;">
+                    <span class="accent">[INPUT]:</span> <input type="text" id="digits" placeholder="e.g., 555-123-4567" style="background:#000; color:#ffff00; border:1px solid #00ff66; font-family: 'Courier New'; padding: 5px;">
+                    <button onclick="breakLoop()" style="background:#00ff66; color:#000; border:none; padding:5px 10px; font-family:'Courier New'; font-weight:bold; cursor:pointer;">EXECUTE OVERRIDE</button>
+                </div>
+            `;
+            container.appendChild(interaction);
+        }
+    }
+
+    function breakLoop() {
+        const val = document.getElementById('digits').value;
+        if(val.trim() === "") {
+            alert("Nice try. The circuit remains broken. Give the machine its fuel.");
+        } else {
+            container.innerHTML = `
+                <p class="success">>> VARIABLE ACQUIRED. LOOP BROKEN.</p>
+                <p class="accent">>> Zeroclaw executing delivery payload...</p>
+                <p style="color:#fff;">"The machine says thanks. Now that the compiler is happy... drinks tonight?"</p>
+            `;
+        }
+    }
+
+    window.onload = runPipeline;
+</script>
+</body>
+</html>

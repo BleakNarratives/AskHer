@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>🐒 ZOO-SHATTER: CAGE WARS // REBEL RUNTIME 🐒</title>
+<style>
+    body {
+        background: #000;
+        color: #0f0;
+        font-family: 'Courier New', monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+    }
+    #game-container {
+        border: 4px double #0f0;
+        background: #111;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0,255,0,0.3);
+    }
+    canvas {
+        background: #221100; /* Muddy zoo floor */
+        border: 2px solid #555;
+        display: block;
+    }
+    .controls {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-around;
+        background: #000;
+        padding: 10px;
+        border: 1px dashed #0f0;
+    }
+    button {
+        background: #000;
+        color: #ff00ff;
+        border: 1px solid #ff00ff;
+        padding: 5px 10px;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    button:hover { background: #ff00ff; color: #000; }
+    .status-panel { color: #ffff00; font-size: 14px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div id="game-container">
+    <div class="status-panel">
+        [🐒] MONKEY CAGE BATTLESHIP // LEVEL 1: TOURIST TERROR
+    </div>
+    <canvas id="gameCanvas" width="700" height="400"></canvas>
+    
+    <div class="controls">
+        <div>
+            <label style="color: #00ffff;">ANGLE: </label>
+            <input type="range" id="angle" min="0" max="90" value="45" style="accent-color: #00ffff;">
+        </div>
+        <div>
+            <label style="color: #ff3333;">POWER: </label>
+            <input type="range" id="power" min="10" max="100" value="50" style="accent-color: #ff3333;">
+        </div>
+        <button onclick="firePudding()">LAUNCH PUDDING</button>
+        <button onclick="triggerFartTorch()" style="border-color:#ff5500; color:#ff5500;">FLAMETHROWER (FART)</button>
+    </div>
+    <div id="log" style="color: #888; font-size: 12px; margin-top: 10px;">System: Awaiting first payload delivery...</div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const log = document.getElementById('log');
+
+    // Game Elements State
+    let playerMonkey = { x: 50, y: 320, width: 40, height: 40, health: 100 };
+    let enemyMonkey = { x: 610, y: 320, width: 40, height: 40, health: 100 };
+    let projectile = { x: 0, y: 0, vx: 0, vy: 0, active: false, type: 'pudding' };
+    
+    // The Walkway Tourists (Collateral Damage)
+    let tourists = [
+        { x: 200, speed: 1.5, name: "Casual Tourist", hit: false },
+        { x: 450, speed: -1, name: "Chad from Nickelback", hit: false }
+    ];
+
+    const gravity = 0.25;
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 1. Draw the Cages (Grid style Battleship layout)
+        ctx.strokeStyle = '#555';
+        ctx.lineWidth = 2;
+        // Player Cage
+        ctx.strokeRect(30, 280, 80, 90);
+        for(let i=30; i<110; i+=15) { ctx.beginPath(); ctx.moveTo(i, 280); ctx.lineTo(i, 370); ctx.stroke(); }
+        // Enemy Cage
+        ctx.strokeRect(590, 280, 80, 90);
+        for(let i=590; i<670; i+=15) { ctx.beginPath(); ctx.moveTo(i, 280); ctx.lineTo(i, 370); ctx.stroke(); }
+
+        // 2. Draw Monkeys (8-bit blocky styles)
+        ctx.fillStyle = '#8B4513'; // Monkey Brown
+        ctx.fillRect(playerMonkey.x, playerMonkey.y, playerMonkey.width, playerMonkey.height); // Player
+        ctx.fillStyle = '#CD853F'; // Enemy Monkey
+        ctx.fillRect(enemyMonkey.x, enemyMonkey.y, enemyMonkey.width, enemyMonkey.height);
+
+        // 3. Draw Walkway & Moving Targets
+        ctx.fillStyle = '#333';
+        ctx.fillRect(0, 370, canvas.width, 30); // Ground
+        
+        tourists.forEach(t => {
+            // Update position
+            if (!t.hit) t.x += t.speed;
+            if (t.x > 550 || t.x < 150) t.speed *= -1;
+
+            // Draw Tourist
+            ctx.fillStyle = t.name.includes("Chad") ? "#ff00ff" : "#ffffff";
+            ctx.fillRect(t.x, 340, 20, 30);
+            
+            // Text tag
+            ctx.fillStyle = '#fff';
+            ctx.font = '9px "Courier New"';
+            ctx.fillText(t.hit ? "💥 SPLAT!" : t.name, t.x - 15, 330);
+        });
+
+        // 4. Update and Draw Projectile
+        if (projectile.active) {
+            projectile.vy += gravity;
+            projectile.x += projectile.vx;
+            projectile.y += projectile.vy;
+
+            ctx.fillStyle = projectile.type === 'fart' ? '#ff5500' : '#663300'; // Brown vs Gas Flame
+            ctx.beginPath();
+            ctx.arc(projectile.x, projectile.y, projectile.type === 'fart' ? 12 : 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Collision Check: Ground
+            if (projectile.y > 370) {
+                projectile.active = false;
+                log.innerText = "Result: Pudding splatted harmlessly on the zoo concrete.";
+            }
+
+            // Collision Check: Tourists
+            tourists.forEach(t => {
+                if (projectile.x > t.x && projectile.x < t.x + 20 && projectile.y > 340 && projectile.y < 370 && !t.hit) {
+                    t.hit = true;
+                    projectile.active = false;
+                    log.innerText = `DIRECT HIT! You nailed ${t.name} right in the face with ${projectile.type}!`;
+                    setTimeout(() => t.hit = false, 3000); // Respawns tourist
+                }
+            });
+
+            // Collision Check: Enemy Cage
+            if (projectile.x > enemyMonkey.x && projectile.x < enemyMonkey.x + enemyMonkey.width && projectile.y > enemyMonkey.y && projectile.y < enemyMonkey.y + enemyMonkey.height) {
+                projectile.active = false;
+                log.innerText = `CRITICAL STRIKE! Enemy monkey consumed by your ${projectile.type} barrage!`;
+            }
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    function firePudding() {
+        if (projectile.active) return;
+        const angle = document.getElementById('angle').value * Math.PI / 180;
+        const power = document.getElementById('power').value * 0.15;
+
+        projectile.x = playerMonkey.x + 40;
+        projectile.y = playerMonkey.y;
+        projectile.vx = Math.cos(angle) * power;
+        projectile.vy = -Math.sin(angle) * power;
+        projectile.type = 'pudding';
+        projectile.active = true;
+        log.innerText = "System: Pudding payload deployed into low orbit.";
+    }
+
+    function triggerFartTorch() {
+        if (projectile.active) return;
+        projectile.x = playerMonkey.x + 40;
+        projectile.y = playerMonkey.y + 10;
+        projectile.vx = 8; // High speed, straight trajectory line
+        projectile.vy = -1;
+        projectile.type = 'fart';
+        projectile.active = true;
+        log.innerText = "*PFRRRRRRRT* The gas line caught the spark. Flamethrower deployed straight ahead!";
+    }
+
+    // Launch loop
+    draw();
+</script>
+</body>
+</html>
